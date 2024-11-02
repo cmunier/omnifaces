@@ -32,7 +32,7 @@ import java.util.function.UnaryOperator;
  *
  * <h2>This class is not listed in showcase! Should I use it?</h2>
  * <p>
- * This class is indeed intented for internal usage only. We won't add methods here on user request. We only add methods
+ * This class is indeed intended for internal usage only. We won't add methods here on user request. We only add methods
  * here once we encounter non-DRY code in OmniFaces codebase. The methods may be renamed/changed without notice.
  * <p>
  * We don't stop you from using it if you found it in the Javadoc and you think you find it useful, but you have to
@@ -96,7 +96,7 @@ public final class Json {
             builder.append("null");
         }
         else if (object instanceof Boolean || object instanceof Number) {
-            builder.append(object.toString());
+            builder.append(object);
         }
         else if (object instanceof CharSequence || object instanceof Enum<?>) {
             encodeString(object.toString(), builder);
