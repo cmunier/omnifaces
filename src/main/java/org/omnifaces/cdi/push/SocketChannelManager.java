@@ -121,7 +121,6 @@ public class SocketChannelManager implements Serializable {
      * @return The web socket channel identifier. This can be used as web socket URI.
      * @throws IllegalArgumentException When the scope is invalid or when channel already exists on a different scope.
      */
-    @SuppressWarnings("unchecked")
     protected String register(String channel, String scope, Serializable user) {
         switch (Scope.of(scope, user)) {
             case APPLICATION: return register(null, channel, APPLICATION_SCOPE, sessionScopedChannels, getViewScopedChannels(false));
@@ -131,7 +130,7 @@ public class SocketChannelManager implements Serializable {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SafeVarargs
     private String register(Serializable user, String channel, Map<String, String> targetScope, Map<String, String>... otherScopes) {
         if (!targetScope.containsKey(channel)) {
             for (var otherScope : otherScopes) {
@@ -140,7 +139,7 @@ public class SocketChannelManager implements Serializable {
                 }
             }
 
-            ((ConcurrentHashMap<String, String>) targetScope).putIfAbsent(channel, channel + "?" + UUID.randomUUID().toString());
+            ((ConcurrentHashMap<String, String>) targetScope).putIfAbsent(channel, channel + "?" + UUID.randomUUID());
         }
 
         var channelId = targetScope.get(channel);
@@ -209,7 +208,8 @@ public class SocketChannelManager implements Serializable {
     public static class ViewScope implements Serializable {
 
         private static final long serialVersionUID = 1L;
-        private ConcurrentHashMap<String, String> channels = new ConcurrentHashMap<>(ESTIMATED_CHANNELS_PER_VIEW);
+
+        private final ConcurrentHashMap<String, String> channels = new ConcurrentHashMap<>(ESTIMATED_CHANNELS_PER_VIEW);
 
         /**
          * Returns the view scoped channels.
