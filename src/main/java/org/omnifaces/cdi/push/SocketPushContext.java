@@ -49,11 +49,11 @@ public class SocketPushContext implements PushContext {
 
     // Variables ------------------------------------------------------------------------------------------------------
 
-    private String channel;
-    private Map<String, String> sessionScopedChannels;
-    private Map<String, String> viewScopedChannels;
-    private SocketSessionManager socketSessions;
-    private SocketUserManager socketUsers;
+    private final String channel;
+    private final Map<String, String> sessionScopedChannels;
+    private final Map<String, String> viewScopedChannels;
+    private final SocketSessionManager socketSessions;
+    private final SocketUserManager socketUsers;
 
     // Constructors ---------------------------------------------------------------------------------------------------
 
