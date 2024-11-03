@@ -9,6 +9,9 @@ import jakarta.faces.render.RenderKit;
 import jakarta.faces.render.RenderKitWrapper;
 import jakarta.faces.render.Renderer;
 
+import org.omnifaces.component.stylesheet.StylesheetFamily;
+import org.omnifaces.renderer.CriticalStylesheetRenderer;
+
 /**
  * <p>
  * The {@link SubresourceIntegrityRenderKit} will basically wrap the standard script and stylesheet resource renderer
@@ -37,7 +40,8 @@ public class SubresourceIntegrityRenderKit extends RenderKitWrapper {
 
     @Override
     public void addRenderer(String family, String rendererType, Renderer renderer) {
-        var needsIntegrity = UIOutput.COMPONENT_FAMILY.equals(family) && isOneOf(rendererType, RENDERER_TYPE_JS, RENDERER_TYPE_CSS);
+        var needsIntegrity = UIOutput.COMPONENT_FAMILY.equals(family) && isOneOf(rendererType, RENDERER_TYPE_JS, RENDERER_TYPE_CSS)
+                || StylesheetFamily.COMPONENT_FAMILY.equals(family) && CriticalStylesheetRenderer.RENDERER_TYPE.equals(rendererType);
         super.addRenderer(family, rendererType, needsIntegrity ? new SubresourceIntegrityRendererExtension(renderer) : renderer);
     }
 }

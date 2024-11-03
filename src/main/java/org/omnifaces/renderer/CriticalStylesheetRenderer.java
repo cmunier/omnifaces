@@ -23,7 +23,6 @@ import java.io.IOException;
 import jakarta.faces.application.Resource;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.context.ResponseWriter;
 import jakarta.faces.render.FacesRenderer;
 import jakarta.faces.render.Renderer;
 
@@ -54,12 +53,12 @@ public class CriticalStylesheetRenderer extends Renderer {
      */
     @Override
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
-        ResourceIdentifier id = new ResourceIdentifier(component);
-        Resource resource = createResource(context, id);
-        String href = (resource != null) ? resource.getRequestPath() : RES_NOT_FOUND;
+        var id = new ResourceIdentifier(component);
+        var resource = createResource(context, id);
+        var href = resource != null ? resource.getRequestPath() : RES_NOT_FOUND;
         setAttribute(component, "href", href);
 
-        ResponseWriter writer = context.getResponseWriter();
+        var writer = context.getResponseWriter();
         writer.startElement("link", component);
         writeAttribute(writer, "rel", "preload");
         writer.writeURIAttribute("href", href, "href");
@@ -74,13 +73,14 @@ public class CriticalStylesheetRenderer extends Renderer {
      */
     @Override
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-        ResponseWriter writer = context.getResponseWriter();
+        var writer = context.getResponseWriter();
         writer.endElement("link");
-        writer.startElement("noscript", component);
+        writer.startElement("noscript", null);
         writer.startElement("link", component);
         writeAttribute(writer, "rel", "stylesheet");
         writer.writeURIAttribute("href", getAttribute(component, "href"), "href");
         writeAttribute(writer, component, "media");
+        writer.endElement("link");
         writer.endElement("noscript");
 
         context.getApplication().getResourceHandler().markResourceRendered(context, getAttribute(component, "name"), getAttribute(component, "library"));
