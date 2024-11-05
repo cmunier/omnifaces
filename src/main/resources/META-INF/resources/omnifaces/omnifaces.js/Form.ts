@@ -32,7 +32,7 @@ export module Form {
         if (faces) { // Standard JSF API.
             const originalAjaxRequest = faces.ajax.request;
 
-            faces.ajax.request = function(source: HTMLElement, event: any, options: any) {
+            faces.ajax.request = function(source: HTMLElement | string, event: any, options: any) {
                 const originalGetViewState = faces.getViewState;
 
                 faces.getViewState = function(form: HTMLFormElement) {
@@ -52,7 +52,8 @@ export module Form {
                     let encodedExecuteIds: string[] = [];
 
                     if (execute.indexOf("@none") == -1) {
-                        executeIds = execute.replace("@this", source.id).split(" ");
+                        const sourceId = source instanceof HTMLElement ? source.id : source
+                        executeIds = execute.replace("@this", sourceId).split(" ");
                         encodedExecuteIds = executeIds.map(encodeURIComponent);
                     }
 
